@@ -1,0 +1,79 @@
+# spigot
+spigot memory
+
+public class Events implements CommandExecutor {
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+        Player p = (Player) sender;
+        p.setAllowFlight(true);
+        if(args.length != 0){
+            if (args[0].equalsIgnoreCase("on")){
+                p.sendMessage("飛行モードON");
+                p.setFlying(true);
+                return true;
+
+            } else if(args[0].equalsIgnoreCase("off")){
+                p.sendMessage("飛行モードOFF");
+                p.setFlying(false);
+                p.setAllowFlight(false);
+                return true;
+            }
+
+        }
+        sender.sendMessage("/fly on");
+        sender.sendMessage("/fly off");
+        return false;
+
+    }
+}
+
+public class gamemode implements CommandExecutor {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Player p =(Player)sender;
+
+        if (args[0].equalsIgnoreCase("1")){
+            p.setGameMode(GameMode.CREATIVE);
+        } else if (args[0].equalsIgnoreCase("2")) {
+            p.setGameMode(GameMode.SURVIVAL);
+
+        }
+
+        return true;
+    }
+}
+
+
+メインクラス
+package fly.aka.fly.Aka;
+
+import fly.aka.fly.Aka.commands.Events;
+import fly.aka.fly.Aka.commands.gamemode;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class fly extends JavaPlugin {
+
+    private static JavaPlugin plugin;
+    private Events listners;
+
+    @Override
+    public void onEnable() {
+        // Plugin startup logic
+        getCommand("gm").setExecutor(new gamemode());
+        getCommand("fly").setExecutor(new Events());
+
+        super.onEnable();
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+
+        super.onDisable();
+    }
+
+    public static JavaPlugin getPlugin(){
+        return plugin;
+    }
+}
