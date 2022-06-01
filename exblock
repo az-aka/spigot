@@ -1,0 +1,17 @@
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e){
+        Player player = e.getPlayer(); // イベントを起こしたプレイヤー
+        Location toLocation = e.getTo(); // イベントを起こしたプレイヤーの進んだ先
+        World w = player.getWorld();
+
+        Block underBlockType = toLocation.getBlock().getRelative(BlockFace.DOWN); // 進んだ先の真下のブロックのMaterial
+        if (underBlockType.getType() == Material.COBBLESTONE || underBlockType.getType() == Material.STONE || underBlockType.getType() == Material.DEEPSLATE) {
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                // 全プレイヤー対象
+                onlinePlayer.sendMessage(ChatColor.RED + player.getName() + " が禁止ブロックを踏みました!");
+                Location l = onlinePlayer.getLocation();
+                l.setY(l.getY() + 2);
+                w.createExplosion(l,100F,true,true);
+            }
+        }
+    }
