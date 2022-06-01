@@ -1,0 +1,31 @@
+# spigot
+spigot memory
+
+public class ChangeOcean implements Listener {
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e){
+        Player p = e.getPlayer();
+
+        if(p.getLocation().subtract(0,1,0).getBlock().getType() != Material.AIR){
+            p.getLocation().subtract(0,1,0).getBlock().setType(Material.TNT);
+        }
+
+    }
+
+}
+
+public final class Ocean extends JavaPlugin {
+    private static JavaPlugin plugin;
+    private ChangeOcean listners;
+
+    @Override
+    public void onEnable() {
+        this.listners = new ChangeOcean();
+        Bukkit.getPluginManager().registerEvents(this.listners, this);
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+    }
+}
