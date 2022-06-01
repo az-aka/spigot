@@ -1,0 +1,91 @@
+# spigot
+spigot memory
+
+delay
+
+メイン
+
+
+package delay.delay;
+
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+public final class Delay extends JavaPlugin implements Listener{
+public static Delay plugin;
+
+public InteractListener listners;
+
+    @Override
+    public void onEnable() {
+        // Plugin startup logic
+        plugin = this;
+        getServer().getPluginManager().registerEvents(new InteractListener(),this);
+    }
+
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+    }
+}
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+package delay.delay;
+
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+public class ExplodeScheduler extends BukkitRunnable {
+    private final Player player;
+    private final int maxCount;
+    private int count = 0;
+    private int tnt = 1;
+
+    public ExplodeScheduler(Player player,int maxCount){
+        this.player = player;
+        this.maxCount = maxCount;
+    }
+
+    @Override
+    public void run() {
+        if(count >= maxCount){
+            this.cancel();
+        }
+        World w = player.getWorld();
+        Location l = player.getLocation();
+        w.createExplosion(l,10f,false,false);
+        count ++;
+        tnt ++;
+    }
+}
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+
+package delay.delay;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.plugin.Plugin;
+
+public class InteractListener implements Listener {
+    @EventHandler
+    public void onClick(PlayerInteractEvent e){
+        Player p = e.getPlayer();
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
+            if (e.getHand() != EquipmentSlot.HAND)return;
+            if (p.getInventory().getItemInMainHand().getType() != Material.STICK)return;
+            new ExplodeScheduler(p,5).runTaskTimer(Delay.plugin,0,0);
+        }
+    }
+}
