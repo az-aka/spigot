@@ -1,0 +1,49 @@
+# spigot
+spigot memory
+
+public class Events implements Listener {
+
+    @EventHandler
+    public void onChatPrefixAdmins(AsyncPlayerChatEvent e){
+        e.setCancelled(true);
+
+        if(e.getPlayer().isOp()){
+            Bukkit.broadcastMessage(ChatColor.GOLD+"[Admin]" +e.getPlayer().getName() + ChatColor.GREEN+":"+e.getMessage());
+        } else{
+            Bukkit.broadcastMessage(e.getPlayer().getName()+":"+e.getMessage());
+        }
+    }
+
+    @EventHandler
+    public void onBreakDiamondBlock(BlockBreakEvent e){
+        if(e.getBlock().getType() == Material.DIAMOND_BLOCK){
+            e.setCancelled(true);
+            Bukkit.broadcastMessage(e.getPlayer().getName()+"さんがダイアブロックを破壊しました");
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e){
+        Player p=(Player) e.getEntity().getPlayer();
+        p.getWorld().strikeLightningEffect(p.getLocation());
+        Bukkit.broadcastMessage(p.getName()+"が死亡したことにより雷が落ちました");
+    }
+
+    @EventHandler
+    public void onPlayerInteractBlock(PlayerInteractEvent e){
+        Player p = e.getPlayer();
+        if(p.getInventory().getItemInOffHand().getType() == Material.DIAMOND_AXE){
+            p.getWorld().strikeLightning(p.getTargetBlock(null,15).getLocation());
+        }
+    }
+
+        public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+            Player p = (Player) sender;
+        if(cmd.getName().equalsIgnoreCase("Thor")){
+            p.sendMessage(ChatColor.DARK_AQUA + "ハンマーが付与されました");
+            p.getInventory().addItem(new ItemStack(Material.DIAMOND_AXE));
+
+        }
+        return true;
+    }
+}
