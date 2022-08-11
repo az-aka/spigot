@@ -1,0 +1,32 @@
+# spigot
+spigot memory
+
+public class EventListner implements Listener {
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e){
+        Player p = e.getPlayer();
+        Block b = p.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        if(b.getType() == Material.AIR || b.getType() == Material.WATER)return;
+        b.getLocation().getBlock().setType(Material.BEDROCK);
+    }
+
+    @EventHandler
+    public void facechange(PlayerMoveEvent e){
+        Player player = e.getPlayer();
+        Vector vec = player.getLocation().toVector(); // get player's location vector
+        Vector dir = player.getLocation().getDirection(); // get player's facing
+        vec = vec.add(dir.multiply(5)); // add player's direction * 3 to the location (getting ~3 blocks in front of player)
+        Location location = vec.toLocation(player.getWorld());
+        location.getBlock().setType(Material.BEDROCK);
+    }
+    
+    @EventHandler
+    public void onDiamond(EntityPickupItemEvent e){
+        if(e.getEntity() instanceof Player && e.getItem().getItemStack().getType() == Material.DIAMOND){
+            for(Player op: Bukkit.getOnlinePlayers()){
+                op.getLocation().getWorld().playSound(op.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,1,1);
+                op.sendTitle(net.md_5.bungee.api.ChatColor.AQUA + "GAME CLEAR!!!", "足元が岩盤になる世界", 40, 110, 40);
+            }
+        }
+    }
+}
